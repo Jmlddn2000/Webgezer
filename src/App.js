@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import './App.css';
 import Canvas from './Pages/Canvas';
+import Kalibrasi from './Pages/Kalibrasi';
 
 function App() {
 
@@ -14,7 +15,7 @@ function App() {
   return (
     <div>
       <h1>Anjas</h1>
-      <Canvas />
+      <Kalibrasi />
     </div>
   );
 }

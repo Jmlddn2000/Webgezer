@@ -1,4 +1,4 @@
-import React from 'react'
+import {useEffect, useRef, useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/Kalibrasi.css'
 import $ from 'jquery';
@@ -7,9 +7,27 @@ import Canvas from './Canvas.jsx';
 // import withReactContent from 'sweetalert2-react-content'
 
 
-export default function Kalibrasi( getCanvas) {
+export default function Kalibrasi( ) {
+  const [data_toogle, setData_Toogle] = useState(false)
+  const canvasRef = useRef(null)
 
-  //====================================================== Kalibrasi File
+  useEffect(() => {
+    // console.log("x")
+    const canvas = canvasRef.current
+    const context = canvas.getContext('2d')
+    context.clearRect(0, 0, canvas.width, canvas.height)
+    //Our first draw
+    // context.fillStyle = ('green')
+    // context.fillRect(0, 0, canvas.width, canvas.height)
+  },)
+
+  const getdataToogle = () => {
+    setData_Toogle(!data_toogle)
+    console.log(data_toogle)
+  }
+
+
+  // //====================================================== Kalibrasi File
     var PointCalibrate = 0;
     var CalibrationPoints={};
     // const MySwal = withReactContent(Swal)
@@ -18,10 +36,14 @@ export default function Kalibrasi( getCanvas) {
      * Clear the canvas and the calibration button.
      */
     function ClearCanvas(){
-      $(".Calibration").hide();
-      var canvas = document.getElementById("plotting_canvas");
-      canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
-    }
+      useEffect(() => {
+        $(".Calibration").hide();
+        const canvas = canvasRef.current
+        const context = canvas.getContext('2d')
+        // var canvas = document.getElementById("plotting_canvas");
+        context.getContext('2d').clearRect(0, 0, context.canvas.width, context.canvas.height);
+      })
+      }
     
     /**
      * Show the instruction of using calibration at the start up screen.
@@ -85,8 +107,9 @@ export default function Kalibrasi( getCanvas) {
                 $("#Pt5").show();
     
                 // clears the canvas
-                var canvas = document.getElementById("plotting_canvas");
-                canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+                  const canvas = canvasRef.current
+                  canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+      
     
                 // notification for the measurement process
                 Swal.fire({
@@ -163,7 +186,7 @@ export default function Kalibrasi( getCanvas) {
       return new Promise((resolve) => setTimeout(resolve, time));
     }
 
-    //==================================================== presision calculate file
+  //   //==================================================== presision calculate file
 
     function calculatePrecision(past50Array) {
       var windowHeight = $(window).height();
@@ -220,7 +243,7 @@ export default function Kalibrasi( getCanvas) {
     return precision;
   }
 
-  // =============================== presision store point =============================
+  // // =============================== presision store point =============================
       /*
     * Sets store_points to true, so all the occuring prediction
     * points are stored
@@ -238,31 +261,106 @@ export default function Kalibrasi( getCanvas) {
       webgazer.params.storingPoints = false;
     }
 
+    // =============================== file main
+    window.onload = async function() {
+      var obj = []
+  
+      //start the webgazer tracker
+      await webgazer.setRegression('ridge') /* currently must set regression and tracker */
+          //.setTracker('clmtrackr')
+          .setGazeListener(function(data, elapsedTime) {
+              if (data == null) {
+                  return;
+              }
+              var xprediction = data.x; //these x coordinates are relative to the viewport
+              var yprediction = data.y; //these y coordinates are relative to the viewport
+  
+              setInterval(() => {
+                  const obj_data = {
+                      x : xprediction,
+                      y : yprediction
+                  }
+                  obj.push(obj_data)
+              },2000)
+              // console.log(obj)
+                  
+          })
+          .saveDataAcrossSessions(true)
+          .begin();
+  
+  
+  
+      
+          webgazer.showVideoPreview(true) /* shows all video previews */
+              .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
+              .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
+  
+      //Set up the webgazer video feedback.
+      var setup = function() {
+  
+          //Set up the main canvas. The main canvas is used to calibrate the webgazer.
+          var canvas = document.getElementById("plotting_canvas");
+          canvas.width = window.innerWidth;
+          canvas.height = window.innerHeight;
+          canvas.style.position = 'fixed';
+      };
+      setup();
+  
+  };
+  
+  // Set to true if you want to save the data even if you reload the page.
+  window.saveDataAcrossSessions = true;
+  
+  window.onbeforeunload = function() {
+      webgazer.end();
+  }
+  
+  /**
+   * Restart the calibration process by clearing the local storage and reseting the calibration point
+   */
+  function Restart(){
+      document.getElementById("Accuracy").innerHTML = "<a>Not yet Calibrated</a>";
+      webgazer.clearData();
+      ClearCalibration();
+      PopUpInstruction();
+  }
+  
+  const Pause = () => {
+      document.getElementById("pause").innerHTML = "<a>Not yet Calibrated</a>";
+      webgazer.pause();
+  }
+  
+
 
   return (
-    <div>
+
       <div>
-<canvas id="plotting_canvas" width="500" height="500" style="cursor:crosshair;"></canvas>
+        {/* <h1>anjas</h1> */}
+<canvas ref={canvasRef} id="plotting_canvas" width="500" height="500" ></canvas>
   
-<nav id="webgazerNavbar" className="navbar navbar-default navbar-fixed-top">
+<nav id="webgazerNavbar" className="navbar navbar-default navbar-fixed-top ">
   <div className="container-fluid">
+
     <div className="navbar-header">
       {/* <!-- The hamburger menu button --> */}
-      <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+      <button type="button" onClick={getdataToogle} className={data_toogle ? {color: "red"} : {display:"none"}}   data-target="#myNavbar">
         <span className="icon-bar">Menu</span>
       </button>
     </div>
+
     <div className="collapse navbar-collapse" id="myNavbar">
       <ul className="nav navbar-nav">
         {/* <!-- Accuracy --> */}
         <li id="Accuracy"><a>Not yet Calibrated</a></li>
-        <li><a onclick="Restart()" href="#">Recalibrate</a></li>
-        <li><a onclick="webgazer.applyKalmanFilter(!webgazer.params.applyKalmanFilter)" href="#">Toggle Kalman Filter</a></li>
+        <li><a onclick={Restart} href="#">Recalibrate</a></li>
+        {/* <li><a onclick="webgazer.applyKalmanFilter(!webgazer.params.applyKalmanFilter)" href="#">Toggle Kalman Filter</a></li> */}
       </ul>
       <ul className="nav navbar-nav navbar-right">
         <li><button className="helpBtn" data-toggle="modal" data-target="#helpModal"><a data-toggle="modal"><span className="glyphicon glyphicon-cog"></span> Help</a></button></li>
         </ul>
       </div>
+
+
     </div>
   </nav>
 {/* <!-- Calibration points --> */}
@@ -296,10 +394,7 @@ export default function Kalibrasi( getCanvas) {
   </div>
 </div>
 
-{/* <!-- Latest compiled JavaScript --> */}
-{/* <script src="./js/resize_canvas.js"></script>
-<script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script> */}
 </div>
-    </div>
+
   )
 }
