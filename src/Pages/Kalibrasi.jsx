@@ -51,10 +51,13 @@ export default function Kalibrasi( ) {
     /**
       * Show the help instructions right at the start.
       */
-    const helpModalShow = () => {
-        $('#helpModal').modal('show');
-        console.log('jalan kok modalnya');
+      // useEffect(() => {
+      function helpModalShow () {
+        $('#helpModal').modal('show')
+        console.log('jalan kok modalnya 1');
       }
+
+      // })
       
     
     /**
@@ -63,10 +66,10 @@ export default function Kalibrasi( ) {
     * checks that all buttons have been clicked 5 times each, and then goes on to measuring the precision
     */
     useEffect(() => {
-    console.log('click')
-    $(document).ready(function(){
-      ClearCanvas();
-      helpModalShow();
+      $(document).ready(function(){
+        ClearCanvas();
+        console.log('click')
+        helpModalShow();
          $(".Calibration").click(function(){ // click event on the calibration buttons
     
           var id = $(this).attr('id');
