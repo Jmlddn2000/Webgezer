@@ -3,12 +3,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '../assets/css/Kalibrasi.css'
 import $ from 'jquery';
 import Swal from 'sweetalert2';
-import Canvas from './Canvas.jsx';
-// import withReactContent from 'sweetalert2-react-content'
+import calibration from '../assets/img/calibration.png'
 
 
 export default function Kalibrasi( ) {
-  const [data_toogle, setData_Toogle] = useState(false)
+
   const canvasRef = useRef(null)
 
   useEffect(() => {
@@ -21,59 +20,50 @@ export default function Kalibrasi( ) {
     // context.fillRect(0, 0, canvas.width, canvas.height)
   },)
 
-  const getdataToogle = () => {
-    setData_Toogle(!data_toogle)
-    console.log(data_toogle)
-  }
-
-
   // //====================================================== Kalibrasi File
     var PointCalibrate = 0;
     var CalibrationPoints={};
-    // const MySwal = withReactContent(Swal)
-    
-    /**
-     * Clear the canvas and the calibration button.
-     */
+
     function ClearCanvas(){
-      useEffect(() => {
         $(".Calibration").hide();
         const canvas = canvasRef.current
-        const context = canvas.getContext('2d')
-        // var canvas = document.getElementById("plotting_canvas");
-        context.getContext('2d').clearRect(0, 0, context.canvas.width, context.canvas.height);
-      })
+        canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
+        // console.log("Clearing")
       }
     
     /**
      * Show the instruction of using calibration at the start up screen.
      */
     function PopUpInstruction(){
-      ClearCanvas();
-      Swal.fire({
-        title:"Calibration",
-        text: "Please click on each of the 9 points on the screen. You must click on each point 5 times till it goes yellow. This will calibrate your eye movements.",
-        buttons:{
-          cancel: false,
-          confirm: true
-        }
-      }).then(isConfirm => {
-        ShowCalibrationPoint();
-      });
-    
+        ClearCanvas();
+        Swal.fire({
+          title:"Calibration",
+          text: "Please click on each of the 9 points on the screen. You must click on each point 5 times till it goes yellow. This will calibrate your eye movements.",
+          // showCancelButton: true,
+          buttons:{
+            cancel: false,
+            confirm: true
+          }
+        }).then(isConfirm => {
+          ShowCalibrationPoint();
+        });
     }
     /**
       * Show the help instructions right at the start.
       */
-    function helpModalShow() {
+    const helpModalShow = () => {
         $('#helpModal').modal('show');
-    }
+        console.log('jalan kok modalnya');
+      }
+      
     
     /**
      * Load this function when the index page starts.
     * This function listens for button clicks on the html page
     * checks that all buttons have been clicked 5 times each, and then goes on to measuring the precision
     */
+    useEffect(() => {
+    console.log('click')
     $(document).ready(function(){
       ClearCanvas();
       helpModalShow();
@@ -158,12 +148,13 @@ export default function Kalibrasi( ) {
               }
         });
     });
+  })
     
     /**
      * Show the Calibration Points
      */
     function ShowCalibrationPoint() {
-      $(".Calibration").show();
+      $(".Calibrationt").show();
       $("#Pt5").hide(); // initially hides the middle button
     }
     
@@ -261,7 +252,7 @@ export default function Kalibrasi( ) {
       webgazer.params.storingPoints = false;
     }
 
-    // =============================== file main
+    // =============================== file main (memunculkan webgazer) =============================
     window.onload = async function() {
       var obj = []
   
@@ -287,10 +278,7 @@ export default function Kalibrasi( ) {
           })
           .saveDataAcrossSessions(true)
           .begin();
-  
-  
-  
-      
+
           webgazer.showVideoPreview(true) /* shows all video previews */
               .showPredictionPoints(true) /* shows a square every 100 milliseconds where current prediction is */
               .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
@@ -319,6 +307,7 @@ export default function Kalibrasi( ) {
    * Restart the calibration process by clearing the local storage and reseting the calibration point
    */
   function Restart(){
+    // console.log("jalan")
       document.getElementById("Accuracy").innerHTML = "<a>Not yet Calibrated</a>";
       webgazer.clearData();
       ClearCalibration();
@@ -335,64 +324,57 @@ export default function Kalibrasi( ) {
   return (
 
       <div>
-        {/* <h1>anjas</h1> */}
-<canvas ref={canvasRef} id="plotting_canvas" width="500" height="500" ></canvas>
-  
-<nav id="webgazerNavbar" className="navbar navbar-default navbar-fixed-top ">
-  <div className="container-fluid">
+        <nav id="webgazerNavbar" className="navbar navbar-default navbar-fixed-top ">
+          <div className="container-fluid">
 
-    <div className="navbar-header">
-      {/* <!-- The hamburger menu button --> */}
-      <button type="button" onClick={getdataToogle} className={data_toogle ? {color: "red"} : {display:"none"}}   data-target="#myNavbar">
-        <span className="icon-bar">Menu</span>
-      </button>
-    </div>
+            <div className="navbar-header">
+              {/* <!-- The hamburger menu button --> */}
+              <ul className="nav navbar-nav">
+                {/* <!-- Accuracy --> */}
+                <li id="Accuracy"><a>Not yet Calibrated</a></li>
+                <li>
+                  <a onClick={Restart} style={{margin : 10}} href="#">Recalibrate</a>
+                </li>
+              </ul>
 
-    <div className="collapse navbar-collapse" id="myNavbar">
-      <ul className="nav navbar-nav">
-        {/* <!-- Accuracy --> */}
-        <li id="Accuracy"><a>Not yet Calibrated</a></li>
-        <li><a onclick={Restart} href="#">Recalibrate</a></li>
-        {/* <li><a onclick="webgazer.applyKalmanFilter(!webgazer.params.applyKalmanFilter)" href="#">Toggle Kalman Filter</a></li> */}
-      </ul>
-      <ul className="nav navbar-nav navbar-right">
-        <li><button className="helpBtn" data-toggle="modal" data-target="#helpModal"><a data-toggle="modal"><span className="glyphicon glyphicon-cog"></span> Help</a></button></li>
-        </ul>
-      </div>
+            </div>
 
+            </div>
+          </nav>
+        {/* <!-- Calibration points --> */}
+        <div className="calibrationDiv">
+            <input type="button" className="Calibration" id="Pt1"></input>
+            <input type="button" className="Calibration" id="Pt2"></input>
+            <input type="button" className="Calibration" id="Pt3"></input>
+            <input type="button" className="Calibration" id="Pt4"></input>
+            <input type="button" className="Calibration" id="Pt5"></input>
+            <input type="button" className="Calibration" id="Pt6"></input>
+            <input type="button" className="Calibration" id="Pt7"></input>
+            <input type="button" className="Calibration" id="Pt8"></input>
+            <input type="button" className="Calibration" id="Pt9"></input>
+          </div>
 
-    </div>
-  </nav>
-{/* <!-- Calibration points --> */}
-<div className="calibrationDiv">
-    <input type="button" className="Calibration" id="Pt1"></input>
-    <input type="button" className="Calibration" id="Pt2"></input>
-    <input type="button" className="Calibration" id="Pt3"></input>
-    <input type="button" className="Calibration" id="Pt4"></input>
-    <input type="button" className="Calibration" id="Pt5"></input>
-    <input type="button" className="Calibration" id="Pt6"></input>
-    <input type="button" className="Calibration" id="Pt7"></input>
-    <input type="button" className="Calibration" id="Pt8"></input>
-    <input type="button" className="Calibration" id="Pt9"></input>
-  </div>
-  
-  {/* <!-- Modal --> */}
-  <div id="helpModal" className="modal fade" role="dialog">
-    <div className="modal-dialog">
-      
-      {/* <!-- Modal content--> */}
-      <div className="modal-content">
-        <div className="modal-body">
-          <img src="media/example/calibration.png" width="100%" height="100%" alt="webgazer demo instructions"></img>
+          {/* <!-- Modal --> */}
+          <div id="helpModal" className="modal fade" role="dialog">
+            <div className="modal-dialog">
+              
+              {/* <!-- Modal content--> */}
+              <div className="modal-content">
+                <div className="modal-body">
+                  <img src={calibration} width="100%" height="100%" alt="webgazer demo instructions"></img>
+                </div>
+                <div className="modal-footer">
+                  <button id="closeBtn" type="button" className="btn btn-default" data-dismiss="modal">Close & load saved model </button>
+                  <button type="button" id='start_calibration' className="btn btn-primary" data-dismiss="modal" onClick={Restart}>Calibrate</button>
+                </div>
+              </div>
+
+          </div>
         </div>
-        <div className="modal-footer">
-          <button id="closeBtn" type="button" className="btn btn-default" data-dismiss="modal">Close & load saved model </button>
-          <button type="button" id='start_calibration' className="btn btn-primary" data-dismiss="modal" onclick="Restart()">Calibrate</button>
-        </div>
-      </div>
 
-  </div>
-</div>
+
+        {/* canvas */}
+        <canvas ref={canvasRef} id="plotting_canvas" width="10000" height="10000" ></canvas>
 
 </div>
 

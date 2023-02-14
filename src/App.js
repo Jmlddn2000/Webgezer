@@ -5,16 +5,16 @@ import Kalibrasi from './Pages/Kalibrasi';
 
 function App() {
 
-  useEffect(() => {
-    const webgazer = window.webgazer
-    webgazer.setGazeListener((data,clock) => {
-    //  console.log(data)   
-    }).begin()
- })
+//   useEffect(() => {
+//     const webgazer = window.webgazer
+//     webgazer.setGazeListener((data,clock) => {
+//     //  console.log(data)   
+//     }).begin()
+//  })
 
   return (
     <div>
-      <h1>Anjas</h1>
+      {/* <h1>Anjas</h1> */}
       <Kalibrasi />
     </div>
   );
