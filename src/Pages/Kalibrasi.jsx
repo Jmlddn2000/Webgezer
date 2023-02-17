@@ -1,12 +1,26 @@
-import {useEffect, useRef, useState} from 'react'
+import {useEffect, useRef, useState} from 'react';
+import Modal from 'react-bootstrap/Modal';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../assets/css/Kalibrasi.css'
+import 'jquery/dist/jquery.min.js';
+import 'bootstrap/dist/js/bootstrap.min.js';
+import '../assets/css/Kalibrasi.css';
 import $ from 'jquery';
-import Swal from 'sweetalert2';
-import calibration from '../assets/img/calibration.png'
 
+import Swal from 'sweetalert2';
+import calibration from '../assets/img/calibration.png';
 
 export default function Kalibrasi( ) {
+
+
+  const [showHelpModal, setShowHelpModal] = useState(false);
+
+  const handleHelpModalShow = () => {
+    setShowHelpModal(true);
+  };
+
+  const handleHelpModalClose = () => {
+    setShowHelpModal(false);
+  };
 
   const canvasRef = useRef(null)
 
@@ -53,7 +67,7 @@ export default function Kalibrasi( ) {
       */
       // useEffect(() => {
       function helpModalShow () {
-        $('#helpModal').modal('show')
+        // $('#helpModal').modal('show')
         console.log('jalan kok modalnya 1');
       }
 
@@ -157,7 +171,7 @@ export default function Kalibrasi( ) {
      * Show the Calibration Points
      */
     function ShowCalibrationPoint() {
-      $(".Calibrationt").show();
+      $(".Calibration").show();
       $("#Pt5").hide(); // initially hides the middle button
     }
     
@@ -374,8 +388,7 @@ export default function Kalibrasi( ) {
 
           </div>
         </div>
-
-
+    
         {/* canvas */}
         <canvas ref={canvasRef} id="plotting_canvas" width="10000" height="10000" ></canvas>
 
