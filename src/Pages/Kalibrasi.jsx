@@ -1,26 +1,12 @@
-import {useEffect, useRef, useState} from 'react';
-import Modal from 'react-bootstrap/Modal';
+import {useEffect, useRef, useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import 'jquery/dist/jquery.min.js';
-import 'bootstrap/dist/js/bootstrap.min.js';
-import '../assets/css/Kalibrasi.css';
+import '../assets/css/Kalibrasi.css'
 import $ from 'jquery';
-
 import Swal from 'sweetalert2';
-import calibration from '../assets/img/calibration.png';
+import calibration from '../assets/img/calibration.png'
+
 
 export default function Kalibrasi( ) {
-
-
-  const [showHelpModal, setShowHelpModal] = useState(false);
-
-  const handleHelpModalShow = () => {
-    setShowHelpModal(true);
-  };
-
-  const handleHelpModalClose = () => {
-    setShowHelpModal(false);
-  };
 
   const canvasRef = useRef(null)
 
@@ -66,10 +52,7 @@ export default function Kalibrasi( ) {
       * Show the help instructions right at the start.
       */
       // useEffect(() => {
-      function helpModalShow () {
-        // $('#helpModal').modal('show')
-        console.log('jalan kok modalnya 1');
-      }
+
 
       // })
       
@@ -79,11 +62,9 @@ export default function Kalibrasi( ) {
     * This function listens for button clicks on the html page
     * checks that all buttons have been clicked 5 times each, and then goes on to measuring the precision
     */
-    useEffect(() => {
+
       $(document).ready(function(){
         ClearCanvas();
-        console.log('click')
-        helpModalShow();
          $(".Calibration").click(function(){ // click event on the calibration buttons
     
           var id = $(this).attr('id');
@@ -165,7 +146,7 @@ export default function Kalibrasi( ) {
               }
         });
     });
-  })
+
     
     /**
      * Show the Calibration Points
@@ -301,15 +282,15 @@ export default function Kalibrasi( ) {
               .applyKalmanFilter(true); /* Kalman Filter defaults to on. Can be toggled by user. */
   
       //Set up the webgazer video feedback.
-      var setup = function() {
+      // var setup = function() {
   
-          //Set up the main canvas. The main canvas is used to calibrate the webgazer.
-          var canvas = document.getElementById("plotting_canvas");
-          canvas.width = window.innerWidth;
-          canvas.height = window.innerHeight;
-          canvas.style.position = 'fixed';
-      };
-      setup();
+      //     //Set up the main canvas. The main canvas is used to calibrate the webgazer.
+      //     var canvas = document.getElementById("plotting_canvas");
+      //     canvas.width = window.innerWidth;
+      //     canvas.height = window.innerHeight;
+      //     canvas.style.position = 'fixed';
+      // };
+      // setup();
   
   };
   
@@ -350,7 +331,7 @@ export default function Kalibrasi( ) {
                 {/* <!-- Accuracy --> */}
                 <li id="Accuracy"><a>Not yet Calibrated</a></li>
                 <li>
-                  <a onClick={Restart} style={{margin : 10}} href="#">Recalibrate</a>
+                  <a onClick={Restart}  href="#">Recalibrate</a>
                 </li>
               </ul>
 
@@ -371,26 +352,8 @@ export default function Kalibrasi( ) {
             <input type="button" className="Calibration" id="Pt9"></input>
           </div>
 
-          {/* <!-- Modal --> */}
-          <div id="helpModal" className="modal fade" role="dialog">
-            <div className="modal-dialog">
-              
-              {/* <!-- Modal content--> */}
-              <div className="modal-content">
-                <div className="modal-body">
-                  <img src={calibration} width="100%" height="100%" alt="webgazer demo instructions"></img>
-                </div>
-                <div className="modal-footer">
-                  <button id="closeBtn" type="button" className="btn btn-default" data-dismiss="modal">Close & load saved model </button>
-                  <button type="button" id='start_calibration' className="btn btn-primary" data-dismiss="modal" onClick={Restart}>Calibrate</button>
-                </div>
-              </div>
-
-          </div>
-        </div>
-    
         {/* canvas */}
-        <canvas ref={canvasRef} id="plotting_canvas" width="10000" height="10000" ></canvas>
+        <canvas ref={canvasRef} id="plotting_canvas" width="10000" height="10000" style={{cursor:"crosshair"}}></canvas>
 
 </div>
 
