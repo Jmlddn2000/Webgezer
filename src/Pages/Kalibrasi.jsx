@@ -8,7 +8,37 @@ import calibration from '../assets/img/calibration.png'
 
 export default function Kalibrasi( ) {
 
+  const [data, setData] = useState([])
+  
   const canvasRef = useRef(null)
+
+  useEffect(() => {
+      canvasRef.current.height = window.innerHeight;
+      canvasRef.current.width = window.innerWidth;
+
+    // const body = document.querySelector('body');
+    
+    // canvasRef.current.heig
+ 
+    // console.log(window)
+    console.log(canvasRef.current.height)
+  },[])
+
+  
+  useEffect(()=>{
+    window.addEventListener( 'resize', () => {
+      canvasRef.current.height = window.innerHeight;
+      canvasRef.current.width = window.innerWidth;
+    })
+    // const body = document.querySelector('body');
+    
+    // canvasRef.current.heig
+ 
+    // console.log(window)
+    console.log(canvasRef.current.height)
+
+  },[])
+
 
   useEffect(() => {
     // console.log("x")
@@ -16,9 +46,9 @@ export default function Kalibrasi( ) {
     const context = canvas.getContext('2d')
     context.clearRect(0, 0, canvas.width, canvas.height)
     //Our first draw
-    // context.fillStyle = ('green')
-    // context.fillRect(0, 0, canvas.width, canvas.height)
-  },)
+    context.fillStyle = ('green')
+    context.fillRect(0, 0, canvas.width, canvas.height)
+  },[])
 
   // //====================================================== Kalibrasi File
     var PointCalibrate = 0;
@@ -113,7 +143,7 @@ export default function Kalibrasi( ) {
     
                       store_points_variable(); // start storing the prediction points
     
-                      sleep(5000).then(() => {
+                      sleep(2000).then(() => {
                           const webgazer = window.webgazer
                           stop_storing_points_variable(); // stop storing the prediction points
                           var past50 = webgazer.getStoredPoints(); // retrieve the stored points
@@ -251,6 +281,10 @@ export default function Kalibrasi( ) {
     }
 
     // =============================== file main (memunculkan webgazer) =============================
+    useEffect(() => {
+      console.log(data)
+    },[data])
+
     window.onload = async function() {
       var obj = []
   
@@ -263,15 +297,19 @@ export default function Kalibrasi( ) {
               }
               var xprediction = data.x; //these x coordinates are relative to the viewport
               var yprediction = data.y; //these y coordinates are relative to the viewport
-  
-              setInterval(() => {
+              
+              const interval = setInterval(() => {
+              
                   const obj_data = {
                       x : xprediction,
                       y : yprediction
                   }
                   obj.push(obj_data)
               },2000)
-              // console.log(obj)
+
+              if (obj.length > 200){
+                clearInterval(interval);
+              }
                   
           })
           .saveDataAcrossSessions(true)
@@ -322,7 +360,7 @@ export default function Kalibrasi( ) {
   return (
 
       <div>
-        <nav id="webgazerNavbar" className="navbar navbar-default navbar-fixed-top ">
+        <nav id="webgazerNavbar" className="navbar navbar-default navbar-fixed-top position-absolute ">
           <div className="container-fluid">
 
             <div className="navbar-header">
@@ -353,7 +391,7 @@ export default function Kalibrasi( ) {
           </div>
 
         {/* canvas */}
-        <canvas ref={canvasRef} id="plotting_canvas" width="10000" height="10000" style={{cursor:"crosshair"}}></canvas>
+        <canvas ref={canvasRef} id="plotting_canvas" style={{cursor:"crosshair"}}></canvas>
 
 </div>
 
