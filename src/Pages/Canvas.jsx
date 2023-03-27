@@ -1,36 +1,27 @@
-import {useState, useEffect, useRef} from 'react'
-import Kalibrasi from './Kalibrasi';
+import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
+// import webgazer from 'webgazer';
 
-export default function Canvas() {
-    // const [canvas, setCanvas] = useState()
-    
-    //=============================== Canvasss file
-    // function resize() {
-    //     var canvas = document.getElementById('plotting_canvas');
-    //     var context = canvas.getContext('2d');
-    //     context.clearRect(0, 0, canvas.width, canvas.height)
-    //     canvas.width = window.innerWidth;
-    //     canvas.height = window.innerHeight;
-    // };
-    // window.addEventListener('resize', resize, false);
-    const canvasRef = useRef(null)
+function GazeTracker() {
+  const [coordinates, setCoordinates] = useState([]);
+  const webgazer = window.webgazer
 
-    useEffect(() => {
-      // console.log("x")
-      const canvas = canvasRef.current
-      const context = canvas.getContext('2d')
-      context.clearRect(0, 0, context.canvas.width, context.canvas.height)
-      //Our first draw
-      context.fillStyle = ('green')
-      context.fillRect(0, 0, context.canvas.width, context.canvas.height)
-    },)
-      
+  useEffect(() => {
+    webgazer.setRegression('ridge');
+    webgazer.setGazeListener((data, elapsedTime) => {
+      setCoordinates([...coordinates, data]);
+    });
+    webgazer.begin();
+  }, []);
+
   return (
-    <div>
-    <canvas ref={canvasRef} id="plotting_canvas" width="1000" height="500" ></canvas>
-    <h1>Jamal ganteng</h1>
-      {/* <Kalibrasi canvasRef = {canvasRef} /> */}
+    <div class="d-grid gap-2 col-6 mx-auto">
+      <h1>Gaze Tracker</h1>
+      <p>Coordinates captured: {coordinates.length}</p>
+      <button  onClick={() => console.log(coordinates)}>Save Coordinates</button>
     </div>
-  )
+  );
 }
+
+export default GazeTracker;

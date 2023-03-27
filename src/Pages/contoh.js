@@ -10,11 +10,9 @@ import Swal from 'sweetalert2';
 export default function Kalibrasi( ) {
 
   const [data, setData] = useState([])
-  const [koordinat, setKoordinat] = useState([])
-  const [status, setStatus] = useState(false)
+  const [exdata, setExData] = useState('init')
   
   const canvasRef = useRef(null)
-
 
   useEffect(() => {
       canvasRef.current.height = window.innerHeight;
@@ -165,6 +163,7 @@ export default function Kalibrasi( ) {
                               if (isConfirm){
                                 //clear the calibration & hide the last middle button
                                 ClearCanvas();
+                                setExData("startData")
                               } else {
                                 //use restart function to restart the calibration
                                 document.getElementById("Accuracy").innerHTML = "<a>Not yet Calibrated</a>";
@@ -172,6 +171,8 @@ export default function Kalibrasi( ) {
                                 ClearCalibration();
                                 ClearCanvas();
                                 ShowCalibrationPoint();
+                                setExData("startData")
+
                               }
                           });
                       });
@@ -285,11 +286,11 @@ export default function Kalibrasi( ) {
     }
 
     // =============================== file main (memunculkan webgazer) =============================
-    var obj = []
-
     useEffect(() => {
-      // console.log(koordinat)
-    },[koordinat])
+      console.log(exdata)
+    console.log(data)
+
+    },[data,exdata])
 
     const exportData = () => {
       const jsonString = `data:text/json;chatset=utf-8,${encodeURIComponent(
@@ -300,28 +301,12 @@ export default function Kalibrasi( ) {
       link.download = "data.json";
   
       link.click();
-      Pause()
     };
 
-    const headmap = () => {
-      
-    }
-
-    // const mulaiRekam = () => {
-    //   let time = 1000
-    //   for ( let i = 1; i <= 10; i++) {
-    //     console.log(koordinat)
-    //     setTimeout(() => {
-    //       // obj.push(koordinat)
-    //       // console.log(obj, i)
-    //     },i * time)
-    //   }
-    //   console.log(koordinat)
-    // }
-    // console.log(status)
 
     window.onload = async function() {
-
+      var obj = []
+  
       //start the webgazer tracker
       await webgazer.setRegression('ridge') /* currently must set regression and tracker */
           //.setTracker('clmtrackr')
@@ -332,24 +317,20 @@ export default function Kalibrasi( ) {
               var xprediction = data.x; //these x coordinates are relative to the viewport
               var yprediction = data.y; //these y coordinates are relative to the viewport
 
-              var obj_data = {
-                x: xprediction,
-                y: yprediction
-              }
+                  const obj_data = {
+                      x : xprediction,
+                      y : yprediction
+                  }
 
-              setTimeout( () => {
-                obj.push( obj_data );
-              },30000)
+                  if(obj.length < 1000 && exdata === "startData" ){
+                    obj.push(obj_data);
+                    setExData("stopData")
+                    console.log("jalan")
+                  }else if( exdata === "stopData"){
+                    setData(obj)
+                  }
 
-              console.log(obj)
-              setData( obj)
-
-              // setKoordinat(obj_data)
-              // mulaiRekam(xprediction,yprediction)
-              // obj.push(obj_data)
-              // console.log(obj)
-              
-            })
+                })
 
           .saveDataAcrossSessions(true)
           .begin();
@@ -390,11 +371,18 @@ export default function Kalibrasi( ) {
   }
   
   const Pause = () => {
-      // document.getElementById("pause").innerHTML = "<a>Not yet Calibrated</a>";
-      console.log("pause")
+      document.getElementById("pause").innerHTML = "<a>Not yet Calibrated</a>";
       webgazer.pause();
-
   }
+
+  const startDataExport = () => {
+    setExData('startDataExport');
+    console.log('jalan')
+  }
+  const pauseDataExport = () => {
+    setExData("pauseDataExport");
+  }
+  
 
 
   return (
@@ -419,9 +407,9 @@ export default function Kalibrasi( ) {
                 </li>
 
                 <li>
-                <button type="button" onClick={headmap}>
-                  headmap
-                </button>
+                {/* {exdata === 'init' && (
+                  <button style={{marginTop:"100px"}} onClick={startDataExport}>Start Calibration</button>
+                )} */}
                 </li>
               </ul>
 
