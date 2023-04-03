@@ -1,11 +1,17 @@
 import { useEffect, useRef, useState } from "react";
 import h337 from "heatmap.js";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "../assets/css/canvas.css"
 
 export default function Headmap() {
   const heatmapRef = useRef(null);
-  const [data, isDAta] = useState();
+  const [datas, isDAtas] = useState();
   const inputElement = document.getElementById("json-file");
+
+  const height = window.innerHeight
+  const width = window.innerWidth
+
+  console.log("height=" + height + " width=" + width)
 
   function handleFiles(e) {
     const file = e.target.files[0];
@@ -15,13 +21,12 @@ export default function Headmap() {
     reader.onload = function (event) {
       const jsonData = JSON.parse(event.target.result);
       // Do something with the JSON data
-      console.log(jsonData.map((list) => isDAta(list)));
+      console.log(jsonData.map((list) => isDAtas(list)));
     };
 
     reader.readAsText(file);
   }
 
-  console.log(data)
 
   useEffect(() => {
     var heatmapInstance = h337.create({
@@ -31,9 +36,16 @@ export default function Headmap() {
     // now generate some random data
     var points = [];
     var max = 0;
-    var width = 540;
-    var height = 400;
+    var width = window.innerWidth;
+    var height = window.innerHeight;;
     var len = 10;
+
+    if(datas != null) {
+      console.log("ini x", Math.ceil(datas.x),"ini y", Math.ceil(datas.y))
+    }else{
+      console.log("masukkan kordinat")
+    }
+
 
     while (len--) {
       var val = Math.floor(Math.random() * 100);
@@ -57,7 +69,7 @@ export default function Headmap() {
     // if you have a set of datapoints always use setData instead of addData
     // for data initialization
     heatmapInstance.setData(data);
-  },[data]);
+  });
 
   return (
     <div>
@@ -65,14 +77,7 @@ export default function Headmap() {
         <input type="file" onChange={handleFiles} />
       </div>
 
-      <div className="App">
-        {/* <canvas
-          ref={heatmapRef}
-          // height={1000}
-          id="canvasID"
-          className="canvas"
-          // className="position-absolute"
-        ></canvas> */}
+      <div className="App" style={{height: height, width}}>
         <h1>Headmap</h1>
       </div>
     </div>
