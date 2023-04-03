@@ -7,7 +7,7 @@ import Swal from 'sweetalert2';
 // import calibration from '../assets/img/calibration.png'
 
 
-export default function Kalibrasi( ) {
+export default function Taks_4( ) {
 
   const [data, setData] = useState([])
   const [koordinat, setKoordinat] = useState([])
