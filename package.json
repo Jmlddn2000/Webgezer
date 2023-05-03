@@ -9,6 +9,7 @@
     "bootstrap": "^5.2.3",
     "fs": "^0.0.1-security",
     "heatmap.js": "^2.0.5",
+    "heatmapjs": "^2.0.2",
     "jquery": "^3.6.3",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.1",

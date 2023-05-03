@@ -5,6 +5,18 @@ body {
 button {
     border-radius: 4px;
 }
+
+#webgazerVideoFeed{
+    display: none !important;
+}
+
+#webgazerFaceOverlay{
+    /* display: none !important; */
+}
+
+#webgazerFaceFeedbackBox{
+    display: none !important;
+}
 /* Video Feed Styling */
 #overlay {
 /* Video Feed Styling:
@@ -13,7 +25,7 @@ button {
  */
 }
 #webgazerVideoContainer {
-    display: block !important; 
+    display: none !important; 
     position: fixed !important;
     top: 0px !important;
     left: 0px !important;
