@@ -2,19 +2,21 @@ import { useEffect, useRef, useState } from "react";
 import h337 from "heatmap.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../assets/css/canvas.css"
+import Homepage from "./Web/Homepage";
 
 export default function Headmap() {
   const heatmapRef = useRef(null);
   const [datas, isDAtas] = useState([]);
   const inputElement = document.getElementById("json-file");
-  const lists = []
+  const [isdata, setHilang] = useState("init");
+
 
   const height = window.innerHeight
   const width = window.innerWidth
 
-  // console.log("height=" + height + " width=" + width)
 
   function handleFiles(e) {
+    setHilang("hilang")
     const file = e.target.files[0];
 
     const reader = new FileReader();
@@ -69,9 +71,6 @@ export default function Headmap() {
     // now generate some random data
     var points = [];
     var max = 0;
-    var width = window.innerWidth;
-    var height = window.innerHeight;;
-    var len = 10;
 
     if(datas.length === 0) {
       console.log("blm ada datanya")
@@ -97,12 +96,11 @@ export default function Headmap() {
 
   return (
     <div>
-      <div>
-        <input type="file" onChange={handleFiles} />
-      </div>
+
+      {isdata === "init" ? <input type="file" onChange={handleFiles} />  : <input style={{display : "none"}} type="file" onChange={handleFiles} /> }
 
       <div className="App" style={{height: height, width}}>
-        <h1>Headmap</h1>
+        <Homepage />
       </div>
     </div>
   );

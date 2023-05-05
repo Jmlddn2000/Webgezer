@@ -1,10 +1,12 @@
 import {useEffect, useRef, useState} from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
-import '../assets/css/Kalibrasi.css'
+// import '../assets/css/Kalibrasi.css'
 import $ from 'jquery';
 import Swal from 'sweetalert2';
 // import fs from 'fs'
 // import calibration from '../assets/img/calibration.png'
+import Desain_website from './Desain_website';
+import Homepage from './Web/Homepage';
 
 
 export default function Taks_1( ) {
@@ -400,29 +402,22 @@ export default function Taks_1( ) {
   return (
 
       <div>
-        <nav id="webgazerNavbar" className="navbar navbar-default navbar-fixed-top position-absolute ">
-          <div className="container-fluid">
+        {/* <p>
+                  <a onClick={Restart}  href="#">Recalibrate</a>
+        </p> */}
+        <canvas ref={canvasRef} id="plotting_canvas" style={{cursor:"crosshair", position: "absolute"}}></canvas>
+        <nav id="webgazerNavbar" className="navbar navbar-default  position-absolute " style={{margin: "200px"}}>
+          <div className="container-fluid " >
 
             <div className="navbar-header">
               {/* <!-- The hamburger menu button --> */}
-              <ul className="nav navbar-nav">
+              <ul className="d-flex "style={{listStyle: "none"}}>
                 {/* <!-- Accuracy --> */}
                 <li id="Accuracy"><a>Not yet Calibrated</a></li>
                 <li>
                   <a onClick={Restart}  href="#">Recalibrate</a>
                 </li>
 
-                <li>
-                <button type="button" onClick={exportData}>
-                  Export Data
-                </button>
-                </li>
-
-                <li>
-                <button type="button" onClick={headmap}>
-                  headmap
-                </button>
-                </li>
               </ul>
 
             </div>
@@ -443,8 +438,7 @@ export default function Taks_1( ) {
           </div>
 
         {/* canvas */}
-        <canvas ref={canvasRef} id="plotting_canvas" style={{cursor:"crosshair"}}></canvas>
-
+        <Homepage exportData = {exportData} />
 </div>
 
   )
